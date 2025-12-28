@@ -1,0 +1,36 @@
+<configuration>
+
+    <!-- Load Spring properties -->
+    <springProperty name="SLACK_WEBHOOK" source="slack.webhook.url"
+                    defaultValue=""/>
+    <springProperty name="APP_ENV" source="application.environment" defaultValue="local"/>
+    <springProperty name="SERVICE_NAME" source="application.name" defaultValue="unknown-service"/>
+
+    <!-- Console appender for local logs -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- SlackTurboFilter: automatically sends error-level logs and exceptions to Slack -->
+    <!-- Only activate if webhook URL is provided -->
+    <if condition='property("SLACK_WEBHOOK").length() > 0'>
+        <then>
+            <turboFilter class="com.floranow.exception_logger.logging.SlackTurboFilter">
+                <webhookUrl>${SLACK_WEBHOOK}</webhookUrl>
+                <environment>${APP_ENV}</environment>
+                <serviceName>${SERVICE_NAME}</serviceName>
+                <minLevel>ERROR</minLevel>
+                <includeStackTrace>true</includeStackTrace>
+            </turboFilter>
+        </then>
+    </if>
+
+    <!-- Default root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
+
