@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - develop
     tags:
       - 'v*'
   workflow_dispatch:
@@ -26,6 +27,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           
+      - name: Display version information
+        run: |
+          echo "📦 Publishing version: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "🔖 Repository: ${{ github.repository }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo "🔨 Commit: ${{ github.sha }}"
+          
       - name: Configure Maven for GitHub Packages
         run: |
           mkdir -p ~/.m2
@@ -46,10 +54,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Build and Publish to GitHub Packages
+      - name: Clean, Build and Deploy to GitHub Packages
         run: |
-          mvn clean deploy -Dgithub.repository=${{ github.repository }}
+          echo "🧹 Cleaning previous builds..."
+          mvn clean
+          echo "🔨 Building and deploying to GitHub Packages..."
+          mvn deploy -Dgithub.repository=${{ github.repository }}
+          echo "✅ Successfully published to GitHub Packages!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Publish summary
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "## 📦 Package Published Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** \`$VERSION\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository:** \`${{ github.repository }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 View package: https://github.com/orgs/Floranow/packages" >> $GITHUB_STEP_SUMMARY
 
 
