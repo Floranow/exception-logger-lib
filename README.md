@@ -187,3 +187,5 @@ To manually publish to GitHub Packages:
 - Update version in `pom.xml` before publishing
 - Create a git tag for releases: `git tag v1.0.0 && git push origin v1.0.0`
 
+
+
