@@ -2,9 +2,32 @@
 
 ## Quick Start
 
-### 1. Configure GitHub Packages Repository
+### 1. Add Repository and Dependency
 
-First, configure Maven to access GitHub Packages. Add to your `~/.m2/settings.xml`:
+Since this is a **public repository**, you can use it directly without authentication. Add to your project's `pom.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/Floranow/exception-logger-lib</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>com.floranow</groupId>
+    <artifactId>exception-logger-lib</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+</dependencies>
+```
+
+> **Note:** As a public package, no authentication is required for reading. However, if you encounter rate limiting, you can optionally configure authentication (see below).
+
+### Optional: Configure Authentication (Recommended for Production)
+
+For better rate limits and reliability, you can optionally configure authentication. Add to your `~/.m2/settings.xml`:
 
 ```xml
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -21,30 +44,7 @@ First, configure Maven to access GitHub Packages. Add to your `~/.m2/settings.xm
 </settings>
 ```
 
-> **Create a Personal Access Token:** Go to GitHub Settings → Developer settings → Personal access tokens → Generate new token (classic). Select `read:packages` permission.
-
-### 2. Add Dependency
-
-Add to your project's `pom.xml`:
-
-```xml
-<repositories>
-  <repository>
-    <id>github</id>
-    <url>https://maven.pkg.github.com/YOUR_USERNAME/exception-logger-lib</url>
-  </repository>
-</repositories>
-
-<dependencies>
-  <dependency>
-    <groupId>com.floranow</groupId>
-    <artifactId>exception-logger-lib</artifactId>
-    <version>1.0.0</version>
-  </dependency>
-</dependencies>
-```
-
-> **Note:** Replace `YOUR_USERNAME` with the GitHub username/organization that owns the repository.
+> **Create a Personal Access Token (Optional):** Go to GitHub Settings → Developer settings → Personal access tokens → Generate new token (classic). Select `read:packages` permission. This is optional for public packages but recommended for production use.
 
 ### 2. Configure Application Properties
 
@@ -163,13 +163,13 @@ The library is automatically published to GitHub Packages via GitHub Actions whe
 
 #### Manual Publishing
 
-To manually publish:
+To manually publish (requires authentication):
 
 1. **Update version** in `pom.xml` (e.g., `1.0.1`)
-2. **Configure authentication** in `~/.m2/settings.xml` (see Quick Start section)
+2. **Configure authentication** in `~/.m2/settings.xml` with a token that has `write:packages` permission
 3. **Publish**:
    ```bash
-   mvn clean deploy -Dgithub.repository=YOUR_USERNAME/exception-logger-lib
+   mvn clean deploy -Dgithub.repository=Floranow/exception-logger-lib
    ```
 
 #### Version Management

@@ -12,13 +12,37 @@ A shared library for centralized exception logging and notification across all F
 
 ## Installation
 
-### From GitHub Packages
+### From GitHub Packages (Public Repository)
 
-#### 1. Configure Maven to use GitHub Packages
+Since this is a **public repository**, you can use it directly without authentication.
 
-Add to your `~/.m2/settings.xml` (for all projects) or project-specific `pom.xml`:
+#### 1. Add Repository and Dependency
 
-**Option 1: Global settings (~/.m2/settings.xml)**
+Add to your project's `pom.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/Floranow/exception-logger-lib</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>com.floranow</groupId>
+    <artifactId>exception-logger-lib</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+</dependencies>
+```
+
+> **Note:** As a public package, no authentication is required. However, for better rate limits in production environments, you can optionally configure authentication (see below).
+
+#### Optional: Configure Authentication (Recommended for Production)
+
+For better rate limits and reliability, you can optionally add authentication to your `~/.m2/settings.xml`:
+
 ```xml
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -34,29 +58,7 @@ Add to your `~/.m2/settings.xml` (for all projects) or project-specific `pom.xml
 </settings>
 ```
 
-**Option 2: Project-specific (pom.xml)**
-```xml
-<repositories>
-  <repository>
-    <id>github</id>
-    <url>https://maven.pkg.github.com/YOUR_USERNAME/exception-logger-lib</url>
-  </repository>
-</repositories>
-```
-
-> **Note:** Replace `YOUR_USERNAME` with your GitHub username and `YOUR_GITHUB_PERSONAL_ACCESS_TOKEN` with a token that has `read:packages` permission.
-
-#### 2. Add Dependency
-
-Add to your `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>com.floranow</groupId>
-    <artifactId>exception-logger-lib</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
+> **Create a Personal Access Token (Optional):** Go to GitHub Settings → Developer settings → Personal access tokens → Generate new token (classic). Select `read:packages` permission. This is optional for public packages but recommended for production use.
 
 ### Local Installation (Development)
 
@@ -163,7 +165,7 @@ This library is automatically published to GitHub Packages via GitHub Actions wh
 
 ### Manual Publishing
 
-To manually publish to GitHub Packages:
+To manually publish to GitHub Packages (requires authentication):
 
 1. **Create a GitHub Personal Access Token** with `write:packages` permission
 2. **Configure Maven settings** (`~/.m2/settings.xml`):
@@ -178,7 +180,7 @@ To manually publish to GitHub Packages:
    ```
 3. **Publish**:
    ```bash
-   mvn clean deploy -Dgithub.repository=YOUR_USERNAME/exception-logger-lib
+   mvn clean deploy -Dgithub.repository=Floranow/exception-logger-lib
    ```
 
 ### Version Management
