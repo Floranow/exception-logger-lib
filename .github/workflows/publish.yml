@@ -29,10 +29,16 @@ jobs:
           
       - name: Display version information
         run: |
-          echo "📦 Publishing version: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "📦 Publishing version: $CURRENT_VERSION"
           echo "🔖 Repository: ${{ github.repository }}"
           echo "🌿 Branch: ${{ github.ref_name }}"
           echo "🔨 Commit: ${{ github.sha }}"
+          if [[ "$CURRENT_VERSION" == *"-SNAPSHOT"* ]]; then
+            echo "🧪 SNAPSHOT version - can be overwritten on each push"
+          else
+            echo "🏷️  Release version - immutable (use tags for releases)"
+          fi
           
       - name: Configure Maven for GitHub Packages
         run: |
@@ -59,8 +65,10 @@ jobs:
           echo "🧹 Cleaning previous builds..."
           mvn clean
           echo "🔨 Building and deploying to GitHub Packages..."
+          FINAL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "📦 Deploying version: $FINAL_VERSION"
           mvn deploy -Dgithub.repository=${{ github.repository }}
-          echo "✅ Successfully published to GitHub Packages!"
+          echo "✅ Successfully published version $FINAL_VERSION to GitHub Packages!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -73,6 +81,11 @@ jobs:
           echo "- **Repository:** \`${{ github.repository }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          if [[ "$VERSION" == *"-SNAPSHOT"* ]]; then
+            echo "- **Type:** 🧪 SNAPSHOT (can be overwritten)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Type:** 🏷️  Release (immutable)" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🔗 View package: https://github.com/orgs/Floranow/packages" >> $GITHUB_STEP_SUMMARY
 
