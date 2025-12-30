@@ -23,7 +23,7 @@ Add to your project's `pom.xml`:
 ```xml
 <repositories>
   <repository>
-    <id>github</id>
+    <id>github-exception-logger-lib</id>
     <url>https://maven.pkg.github.com/Floranow/exception-logger-lib</url>
   </repository>
 </repositories>
@@ -50,8 +50,8 @@ For better rate limits and reliability, you can optionally add authentication to
           http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
     <server>
-      <id>github</id>
-      <username>YOUR_GITHUB_USERNAME</username>
+      <id>github-exception-logger-lib</id>
+      <username>machine-user-gitlab</username>
       <password>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</password>
     </server>
   </servers>
