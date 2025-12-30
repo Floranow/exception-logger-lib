@@ -1,7 +1,6 @@
 package com.floranow.exception_logger.handler;
 
 import com.floranow.exception_logger.exception.BadRequestException;
-import com.floranow.exception_logger.exception.DuplicateKeyException;
 import com.floranow.exception_logger.exception.ErrorResponse;
 import com.floranow.exception_logger.exception.NotFoundException;
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -29,8 +29,12 @@ import java.util.stream.Collectors;
  * Global exception handler for all REST controllers
  * Handles ALL possible exceptions and automatically logs them with Slack notifications
  * Order matters: more specific exceptions should be handled before generic ones
+ * 
+ * This bean will only be registered if no other GlobalExceptionHandler bean exists.
+ * This allows services to provide their own implementation without conflicts.
  */
 @RestControllerAdvice
+@ConditionalOnMissingBean(name = "globalExceptionHandler")
 public class GlobalExceptionHandler {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 

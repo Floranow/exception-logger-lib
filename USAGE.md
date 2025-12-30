@@ -9,7 +9,7 @@ Since this is a **public repository**, you can use it directly without authentic
 ```xml
 <repositories>
   <repository>
-    <id>github-exception-logger-lib</id>
+    <id>github</id>
     <url>https://maven.pkg.github.com/Floranow/exception-logger-lib</url>
   </repository>
 </repositories>
@@ -18,7 +18,7 @@ Since this is a **public repository**, you can use it directly without authentic
   <dependency>
     <groupId>com.floranow</groupId>
     <artifactId>exception-logger-lib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2-SNAPSHOT</version>
   </dependency>
 </dependencies>
 ```
@@ -36,8 +36,8 @@ For better rate limits and reliability, you can optionally configure authenticat
           http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
     <server>
-      <id>github-exception-logger-lib</id>
-      <username>machine-user-gitlab</username>
+      <id>github</id>
+      <username>YOUR_GITHUB_USERNAME</username>
       <password>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</password>
     </server>
   </servers>
@@ -166,10 +166,19 @@ The library is automatically published to GitHub Packages via GitHub Actions whe
 To manually publish (requires authentication):
 
 1. **Update version** in `pom.xml` (e.g., `1.0.1`)
-2. **Configure authentication** in `~/.m2/settings.xml` with a token that has `write:packages` permission
+2. **Configure authentication** in `~/.m2/settings.xml` with a token that has `write:packages` permission:
+   ```xml
+   <servers>
+     <server>
+       <id>github</id>
+       <username>YOUR_GITHUB_USERNAME</username>
+       <password>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</password>
+     </server>
+   </servers>
+   ```
 3. **Publish**:
    ```bash
-   mvn clean deploy -Dgithub.repository=Floranow/exception-logger-lib
+   mvn clean deploy
    ```
 
 #### Version Management
