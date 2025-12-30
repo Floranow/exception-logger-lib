@@ -157,6 +157,30 @@ Slack notifications are automatically sent for:
 mvn clean install
 ```
 
+## Troubleshooting
+
+### Unresolved Dependency: spring-boot-starter
+
+If you get an error like `Unresolved dependency: 'org.springframework.boot:spring-boot-starter:jar:2.7.12'`:
+
+1. **Ensure Maven Central is configured** (should be default, but verify in your `pom.xml`):
+   ```xml
+   <repositories>
+     <repository>
+       <id>central</id>
+       <url>https://repo1.maven.org/maven2</url>
+     </repository>
+     <repository>
+       <id>github-exception-logger-lib</id>
+       <url>https://maven.pkg.github.com/Floranow/exception-logger-lib</url>
+     </repository>
+   </repositories>
+   ```
+
+2. **The library uses Spring Boot BOM** - it will work with any Spring Boot 2.x version your service uses. The library doesn't force a specific Spring Boot version.
+
+3. **If using a Spring Boot parent POM**, ensure it's properly configured in your service's `pom.xml`.
+
 ## Publishing
 
 This library is automatically published to GitHub Packages via GitHub Actions when:
