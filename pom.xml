@@ -7,7 +7,7 @@
 
     <groupId>com.floranow</groupId>
     <artifactId>exception-logger-lib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>Exception Logger Library</name>
