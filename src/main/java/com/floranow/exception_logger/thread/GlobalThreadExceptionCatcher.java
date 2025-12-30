@@ -13,8 +13,11 @@ import javax.annotation.PostConstruct;
  * 
  * This bean will only be registered if no other GlobalThreadExceptionCatcher bean exists.
  * This allows services to provide their own implementation without conflicts.
+ * 
+ * The condition checks for a bean named "globalThreadExceptionCatcher" - if a service
+ * already defines a bean with this name, this library's version will not be registered.
  */
-@Component
+@Component("exceptionLoggerGlobalThreadExceptionCatcher")
 @ConditionalOnMissingBean(name = "globalThreadExceptionCatcher")
 public class GlobalThreadExceptionCatcher {
 
