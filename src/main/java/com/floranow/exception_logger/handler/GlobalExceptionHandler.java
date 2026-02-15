@@ -15,6 +15,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -32,7 +33,11 @@ import java.util.stream.Collectors;
  * 
  * This bean will only be registered if no other GlobalExceptionHandler bean exists.
  * This allows services to provide their own implementation without conflicts.
+ * 
+ * Uses a unique bean name "exceptionLoggerGlobalExceptionHandler" to avoid conflicts,
+ * and conditionally registers only if "globalExceptionHandler" doesn't exist.
  */
+@Component("exceptionLoggerGlobalExceptionHandler")
 @RestControllerAdvice
 @ConditionalOnMissingBean(name = "globalExceptionHandler")
 public class GlobalExceptionHandler {
